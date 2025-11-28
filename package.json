@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "betting-app",
   "private": true,
   "scripts": {
     "build": "turbo run build",
