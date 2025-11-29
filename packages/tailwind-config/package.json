@@ -1,0 +1,33 @@
+{
+  "name": "@repo/tailwind-config",
+  "version": "1.0.0",
+  "description": "Shared Tailwind CSS configuration for the monorepo.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tailwind",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    "./postcss": "./postcss.config.mjs",
+    "./theme.css": "./theme.css"
+  },
+  "files": [
+    "postcss.config.mjs",
+    "theme.css"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^4.1.17"
+  }
+}

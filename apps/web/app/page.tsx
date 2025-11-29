@@ -1,102 +1,126 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+import { FaBolt, FaTrophy, FaGamepad, FaChevronRight } from "react-icons/fa";
+import { MainLayout } from "./components/layouts/MainLayout";
+import { Button } from "@repo/ui/components/atoms/button";
+import { MatchCard } from "./components/features/betting/MatchCard";
+import { fetchLiveMatches } from "./lib/odds-api"; // Import the fetcher
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+// Revalidate this page every hour to keep odds fresh
+export const revalidate = 3600;
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
+export default async function Dashboard() {
+  // 1. Fetch Real Matches from The Odds API
+  const matches = await fetchLiveMatches();
 
   return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
-
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.com/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <MainLayout>
+      <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        
+        {/* --- Hero Banner --- */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-600 to-primary-900 p-8 md:p-12 text-white border border-primary-500/20 shadow-2xl shadow-primary-500/10">
+          <div className="relative z-10 max-w-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="inline-block px-3 py-1 bg-white/10 border border-white/20 text-xs font-bold rounded-full uppercase tracking-wider backdrop-blur-sm">
+                Welcome Bonus
+              </span>
+              <span className="inline-block px-3 py-1 bg-primary-500 text-black text-xs font-bold rounded-full uppercase tracking-wider">
+                Limited Time
+              </span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-black mb-4 italic tracking-tight">
+              DOUBLE YOUR <br /> 
+              <span className="text-primary-300">FIRST DEPOSIT</span>
+            </h1>
+            
+            <p className="text-primary-100 text-lg mb-8 max-w-md leading-relaxed font-medium">
+              Join thousands of players betting on live sports. Sign up now to claim your <span className="font-bold text-white">₹1,000 welcome bonus</span> instantly.
+            </p>
+            
+            <div className="flex flex-wrap gap-4">
+              <Button size="lg" className="shadow-lg shadow-primary-500/20">
+                Claim Bonus Now
+              </Button>
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                View Promotions
+              </Button>
+            </div>
+          </div>
+          
+          {/* Abstract Background Decoration */}
+          <div className="absolute right-0 top-0 h-full w-2/3 bg-white/5 -skew-x-12 transform translate-x-32 pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-primary-500/30 rounded-full blur-3xl pointer-events-none" />
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.com →
-        </a>
-      </footer>
-    </div>
+
+        {/* --- Live Matches Grid --- */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-text-primary flex items-center gap-3">
+              <FaBolt className="text-danger animate-pulse" />
+              Live & Upcoming
+            </h2>
+            <div className="flex items-center gap-4">
+              <p className="text-xs text-text-secondary">Powered by The Odds API</p>
+              <button className="text-sm font-bold text-primary-400 hover:text-primary-300 transition flex items-center gap-1">
+                View All <FaChevronRight size={10} />
+              </button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {matches.length > 0 ? (
+              matches.map((m) => (
+                <MatchCard 
+                  key={m.id} 
+                  id={m.id}
+                  teamA={m.teamA}
+                  teamB={m.teamB}
+                  time={m.startTime}
+                  status={m.status}
+                  odds={m.odds}
+                />
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center border border-dashed border-border rounded-xl">
+                <p className="text-text-secondary">
+                  No live matches available right now. Check back later!
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* --- Categories Section --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-bg-panel border border-border rounded-3xl p-8 relative overflow-hidden group cursor-pointer hover:border-primary-500/50 transition-all">
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-primary-500/10 rounded-2xl flex items-center justify-center text-primary-500 mb-6 text-3xl">
+                <FaGamepad />
+              </div>
+              <h3 className="text-2xl font-bold text-text-primary mb-2">Casino Games</h3>
+              <p className="text-text-secondary text-sm mb-6">Slots, Roulette, Blackjack & more.</p>
+              <span className="text-sm font-bold text-primary-400 group-hover:underline">Play Now</span>
+            </div>
+            <div className="absolute right-[-20px] bottom-[-20px] text-9xl text-white/5 rotate-12 group-hover:scale-110 transition-transform">
+              <FaGamepad />
+            </div>
+          </div>
+
+          <div className="bg-bg-panel border border-border rounded-3xl p-8 relative overflow-hidden group cursor-pointer hover:border-primary-500/50 transition-all">
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-6 text-3xl">
+                <FaTrophy />
+              </div>
+              <h3 className="text-2xl font-bold text-text-primary mb-2">Sports Betting</h3>
+              <p className="text-text-secondary text-sm mb-6">Cricket, Football, Tennis & more.</p>
+              <span className="text-sm font-bold text-blue-400 group-hover:underline">Bet Now</span>
+            </div>
+            <div className="absolute right-[-20px] bottom-[-20px] text-9xl text-white/5 rotate-12 group-hover:scale-110 transition-transform">
+              <FaTrophy />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </MainLayout>
   );
 }

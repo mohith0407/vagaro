@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+  // FORCE generation into a local source folder
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- MODELS ---
+
+model User {
+  id        String   @id @default(uuid())
+  cognitoId String   @unique 
+  username  String   @unique
+  email     String   @unique
+  name      String?
+  
+  balance      Float @default(0.00) 
+  paperBalance Float @default(1000.00)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  bets          Bet[]
+  transactions  Transaction[]
+}
+
+model Bet {
+  id        String   @id @default(uuid())
+  amount    Float
+  isRealMoney Boolean @default(false)
+  
+  status    BetStatus @default(PENDING)
+  result    String?   
+  matchId   String    
+  selection String    
+  odds      Float     
+  payout    Float?    
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  amount    Float
+  type      TxType   
+  status    TxStatus @default(COMPLETED)
+  
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+enum BetStatus {
+  PENDING
+  WON
+  LOST
+  CANCELLED
+}
+
+enum TxType {
+  DEPOSIT
+  WITHDRAWAL
+  BET_PLACED
+  BET_WON
+  PAPER_RESET
+}
+
+enum TxStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}

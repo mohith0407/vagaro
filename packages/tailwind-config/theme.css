@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* 🎨 Royal Spin Color System */
+  
+  /* Primary Neon Green */
+  --color-primary: #0CE68A;
+  --color-primary-dark: #0ABF70;
+  
+  /* Deep Dark Backgrounds */
+  --color-dark: #111418;       /* Main App Background */
+  --color-dark-card: #1A1D21;  /* Card Background */
+  --color-dark-light: #2A2E33; /* Borders / Inputs */
+  
+  /* Text & Accents */
+  --color-gray-text: #9EA5B1;
+  --color-text-main: #FFFFFF;
+  --color-accent: #25C9FF;
+  --color-danger: #ef4444;
+
+  /* 🧊 Spacing & Radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* ⚡ Animations & Layout */
+  --navbar-height: 60px;
+  --bottom-nav-height: 72px;
+}
+
+/* --- Utilities --- */
+
+@utility shadow-neon {
+  box-shadow: 0 0 20px rgba(12, 230, 138, 0.4);
+}
+
+@utility shadow-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+@utility glass-panel {
+  background: rgba(26, 29, 33, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(12, 230, 138, 0.5);
+}
+
+/* Global Reset */
+@layer base {
+  body {
+    background-color: var(--color-dark);
+    color: var(--color-text-main);
+    font-family: 'Inter', sans-serif;
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@repo/auth",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/auth-options.ts",
+  "types": "src/auth-options.ts",
+  "exports": {
+    ".": "./src/auth-options.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.940.0",
+    "next-auth": "^4.24.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.1",
+    "typescript": "^5.9.2"
+  }
+}
