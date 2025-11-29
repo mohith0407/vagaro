@@ -1,135 +1,128 @@
-# Turborepo starter
+# Vagaro -- Full Stack Betting Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+Vagaro is a modern, high-performance betting platform built using a
+**Turborepo monorepo** with **Next.js 14**, reusable UI packages, and
+secure authentication powered by **AWS Cognito + NextAuth**.\
+It features a **dual-wallet system**, **live odds integration**, and a
+scalable modular architecture designed for production.
 
-## Using this example
+---
 
-Run the following command:
+## Tech Stack
 
-```sh
-npx create-turbo@latest
-```
+| Layer | Technology |
+|------|------------|
+| Monorepo | Turborepo |
+| Frontend | Next.js 14 (App Router) |
+| Styling | Tailwind CSS |
+| Database | PostgreSQL + Prisma ORM + Redis |
+| Authentication | AWS Cognito + NextAuth.js |
+| Live Data | The Odds API |
+| Package Manager | npm |
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Monorepo Architecture
 
-### Apps and Packages
+    |
+    ├── apps/
+    │   └── web/               → Main Next.js application (Frontend + API Routes)
+    │
+    ├── packages/
+    │   ├── db/                → Prisma schema, client, migrations
+    │   ├── ui/                → Reusable UI components (design system)
+    │   ├── auth/              → AWS Cognito + NextAuth config
+    │   └── tailwind-config/   → Shared Tailwind configuration + theme
+    │
+    └── turbo.json             → Turborepo config
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
+## Getting Started
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### 1. Prerequisites
 
-### Utilities
+-   Node.js v18+
+-   PostgreSQL (Local or Cloud (I used aiven cloud))
+-   AWS Cognito User Pool + App Client
+-   API Key from The Odds API
 
-This Turborepo has some additional tools already setup for you:
+## 2. Environment Setup
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### apps/web/.env
 
-### Build
+    DATABASE_URL="postgres://user:password@host:port/dbname?sslmode=require"
+    NEXTAUTH_SECRET="your_random_secret_string"
+    NEXTAUTH_URL="http://localhost:3000"
+    AWS_ACCESS_KEY_ID="AKIA..."
+    AWS_SECRET_ACCESS_KEY="..."
+    AWS_COGNITO_REGION="us-east-1"
+    AWS_COGNITO_USER_POOL_ID="us-east-1_xxxxxxxx"
+    AWS_COGNITO_CLIENT_ID="5aaaaaaaaaaaaaaaaaaaa"
+    THE_ODDS_API_KEY="your_odds_api_key"
+    RAZORPAY_KEY_ID="rzp_test_..."
+    RAZORPAY_KEY_SECRET="..."
 
-To build all apps and packages, run the following command:
+### packages/db/.env
 
-```
-cd my-turborepo
+    DATABASE_URL="postgres://user:password@host:port/dbname?sslmode=require"
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+## 3. Installation & Database Sync
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+    npm install
+    npm run db:generate --workspace=@repo/db
+    npm run db:push --workspace=@repo/db
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 4. Run the App
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+    npm run dev
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## 🎲 Features
 
-### Develop
+### 🔐 Authentication
 
-To develop all apps and packages, run the following command:
+-   AWS Cognito Signup
+-   NextAuth.js Sessions
+-   Auto User Sync to Postgres
 
-```
-cd my-turborepo
+### 💰 Dual-Wallet System
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+-   Paper Money (₹1000 default)
+-   Real Money Wallet
+-   Safe transactional balance updates
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+### 🏆 Betting Engine
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+-   Live odds data
+-   Bet on Team A, B, or Draw
+-   Admin settlement system
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+### 🐳 Docker Support
 
-### Remote Caching
+    docker-compose up --build
+---
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## 📜 Scripts
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+| Command               | Description                  |
+| --------------------- | ---------------------------- |
+| `npm run dev`         | Start all apps in watch mode |
+| `npm run build`       | Build all apps and packages  |
+| `npm run db:generate` | Generate Prisma client       |
+| `npm run db:push`     | Sync DB schema               |
+| `npm run db:studio`   | Launch Prisma Studio         |
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+---
 
-```
-cd my-turborepo
+## 🤝 Contributing
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+    git checkout -b feature/amazing-feature
+    git commit -m "Add feature"
+    git push origin feature/amazing-feature
+---
+## ⭐ Support
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+Star the repo if you like it!
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
